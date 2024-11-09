@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batalla de Pokémon</title>
+    <link rel="stylesheet" href="batalla.css">
+</head>
+<body>
+    
+    <h1><img src="gim.png" class="gim"></h1>
+
+    <div id="battlefield">
+        
+        <div id="player-container" class="pokemon-display">
+            <h2>Tu Pokémon</h2>
+            <img id="player-image" src="" alt="Tu Pokémon">
+            <p id="player-life">Vida: 100</p>
+        </div>
+
+      
+        <div id="rival-container" class="pokemon-display">
+            <h2>Pokémon Rival</h2>
+            <img id="rival-image" src="" alt="Pokémon Rival">
+            <p id="rival-life">Vida: 100</p>
+        </div>
+    </div>
+
+    
+    <div id="messages">
+        <div id="player-message" class="message-box"></div>
+        <div id="rival-message" class="message-box"></div>
+    </div>
+
+   
+    <div class="action-buttons">
+        <button class="btn action" onclick="attack()">Ataque</button>
+        <button class="btn action" onclick="heal()">Curación</button>
+        <button class="btn action" onclick="window.location.href='pantalla2.html'">Rendirse</button>
+        <button class="btn action" id="unico" onclick="window.location.href='menuprincipal.html'">Salir</button>
+    </div>
+
+    <script>
+
+    
+
+        function getPokemonFromLocalStorage(key) {
+            const pokemonData = localStorage.getItem(key);
+            return pokemonData ? JSON.parse(pokemonData) : null;
+        }
+
+        const selectedPokemon = getPokemonFromLocalStorage("selectedPokemon");
+        const rivalPokemon = getPokemonFromLocalStorage("rivalPokemon");
+
+       
+        function updateLife() {
+            document.getElementById("player-life").textContent = `Vida: ${selectedPokemon.hp}`;
+            document.getElementById("rival-life").textContent = `Vida: ${rivalPokemon.hp}`;
+        }
+
+        
+        function updateImage() {
+            if (selectedPokemon && selectedPokemon.img) {
+                document.getElementById("player-image").src = selectedPokemon.img;
+            }
+            if (rivalPokemon && rivalPokemon.img) {
+                document.getElementById("rival-image").src = rivalPokemon.img;
+            }
+        }
+
+        
+        function showMessage(message, player) {
+            const messageBox = player === "player" ? document.getElementById("player-message") : document.getElementById("rival-message");
+            messageBox.textContent = message;
+        }
+
+        function endGame() {
+       
+        document.querySelectorAll(".action").forEach(button => button.disabled = true);
+        document.querySelectorAll("#unico").forEach(button => button.disabled=false);
+    }
+
+   
+    function attack() {
+        if (rivalPokemon.hp > 0) {
+            const damage = Math.floor(Math.random() * 20) + 5; 
+            rivalPokemon.hp -= damage; 
+            showMessage(`¡El Pokémon rival recibió ${damage} puntos de daño!`, "player");
+
+            if (rivalPokemon.hp <= 0) {
+                rivalPokemon.hp = 0;
+                showMessage("¡Has derrotado al Pokémon rival! ¡Has ganado!", "player");
+                endGame(); 
+            } else {
+               
+                const rivalDamage = Math.floor(Math.random() * 20) + 5; 
+                selectedPokemon.hp -= rivalDamage;
+                showMessage(`El Pokémon rival te atacó y te hizo ${rivalDamage} puntos de daño.`, "rival");
+
+                if (selectedPokemon.hp <= 0) {
+                    selectedPokemon.hp = 0;
+                    showMessage("¡Tu Pokémon ha sido derrotado! ¡Has perdido!", "player");
+                    endGame(); 
+            }
+        }
+        }
+        updateLife();
+    }
+
+    
+    function heal() {
+        if (selectedPokemon.hp > 0) {
+            const healAmount = Math.floor(Math.random() * 20) + 10; 
+            selectedPokemon.hp += healAmount; 
+
+            showMessage(`¡Tu Pokémon se curó ${healAmount} puntos de vida!`, "player");
+
+           
+            if (rivalPokemon.hp > 0) {
+                const rivalDamage = Math.floor(Math.random() * 20) + 5; 
+                selectedPokemon.hp -= rivalDamage;
+                showMessage(`El Pokémon rival te atacó y te hizo ${rivalDamage} puntos de daño.`, "rival");
+
+                if (selectedPokemon.hp <= 0) {
+                    selectedPokemon.hp = 0;
+                    showMessage("¡Tu Pokémon ha sido derrotado! ¡Has perdido!", "player");
+                    endGame(); 
+                }
+            }
+        }
+        updateLife();
+    }
+
+       
+        if (selectedPokemon) {
+            updateLife();
+            updateImage(); 
+        }
+        if (rivalPokemon) {
+            updateLife();
+            updateImage(); 
+        }
+
+    </script>
+</body>
+</html>

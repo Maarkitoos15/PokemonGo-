@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documento</title>
+    <link rel="stylesheet" href="menuprincipal.css">
+</head>
+<body>
+
+    <div class="fondo-movil"></div>
+
+    <div class="titulo-contenedor"> 
+        <img src="tituloprincipal.png" class="titulo"> 
+    </div>
+
+    <div id="contenedor-jugador" class="mostrar-pokemon"> 
+        <img src="pokemon.jpg" class="ajuste"> 
+    </div>
+    
+    <div class="boton-iniciar">
+        <button onclick="iniciarJuego()" class="boton">POKEJUEGO</button>
+    </div>
+
+    <script>
+        function iniciarJuego() {
+            console.log("Hola");
+            window.location.href = "pantalla.html";
+        }
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batalla de Pokémon</title>
+    <link rel="stylesheet" href="pantalla2.css">
+</head>
+<body>
+    <h1>¡Batalla Pokémon!</h1>
+
+    <div id="player-container" class="pokemon-display">
+        <h2>Tu Pokémon</h2>
+        <div id="player-pokemon"></div>
+    </div>
+
+    <div id="rival-container" class="pokemon-display">
+        <h2>Pokémon del Rival</h2>
+        <div id="rival-pokemon"></div>
+    </div>
+
+ 
+    <div class="action-buttons">
+    
+        <button class="btn btn-start" onclick="window.location.href='batallapoke.html'">Empezar combate</button>
+        <button class="btn btn-back" onclick="window.location.href='pantalla.html'">Elegir otro Pokémon</button>
+    </div>
+
+    <script>
+
+    if (!sessionStorage.getItem("navegacion") && (document.referrer === "" || !document.referrer.includes(window.location.origin))) {
+        window.location.href = "menuprincipal.html";
+    } else {
+        sessionStorage.setItem("navegacion", "true");
+    }
+
+        function getPokemonFromLocalStorage(key) {
+            const pokemonData = localStorage.getItem(key);
+            return pokemonData ? JSON.parse(pokemonData) : null;
+        }
+
+        const selectedPokemon = getPokemonFromLocalStorage("selectedPokemon");
+        const rivalPokemon = getPokemonFromLocalStorage("rivalPokemon");
+
+        function displayPokemon(containerId, pokemon) {
+            if (pokemon) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = `
+                    <img src="${pokemon.img}" alt="${pokemon.name}">
+                    <h3>${pokemon.name}</h3>
+                    <p>Vida: ${pokemon.life}</p>
+                    <div class="types">
+                        ${pokemon.types.map(type => `<span class="type ${type}">${type}</span>`).join('')}
+                    </div>
+                `;
+            } else {
+                console.error(`No se encontró el Pokémon en localStorage para ${containerId}.`);
+            }
+        }
+
+        if (selectedPokemon) displayPokemon("player-pokemon", selectedPokemon);
+        if (rivalPokemon) displayPokemon("rival-pokemon", rivalPokemon);
+    </script>
+</body>
+</html>
